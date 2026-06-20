@@ -6,9 +6,45 @@ The system leverages a multi-agent coordination architecture in the background t
 
 ![HealthGuardian AI Clinical Workflow](./public/images/workflow.png)
 
-### The Multi-Agent Clinical Workflow
-When a patient uploads a laboratory panel or submits symptom details, HealthGuardian AI triggers a sequenced background pipeline of five specialized AI agents. First, the **Report Analysis Agent** extracts biomarkers using client-side PDF.js/Tesseract.js text parsers. Next, the **Health Memory Agent** queries local database archives to align these values with past history. Third, the **Insight Generation Agent** computes the longitudinal health score and charts the progression trajectory. Fourth, the **Safety & Risk Detection Agent** double-checks values against emergency limits. Finally, the **Doctor Summary Agent** synthesizes consultation notes and check-list questions. This ensures that rather than delivering a simple one-off diagnostic summary, the platform acts as an ongoing tracking operations center, enabling patients to identify trends before they cross into critical bounds.
+### The Multi-Agent Clinical Workflow Explained
 
+When a patient uploads a laboratory panel or submits symptom details, HealthGuardian AI initiates a sequenced, background coordination pipeline of five specialized AI agents. Rather than delivering a simple one-off static response, the orchestration of these agents guarantees an ongoing tracking operations center that helps patients detect trends before they cross into critical clinical bounds.
+
+Here is the step-by-step agentic execution path:
+
+1. **Report Analysis Agent (Ingestion & Extraction):**
+   * **Role:** Analyzes the raw unstructured text extracted via client-side `PDF.js` (for PDF documents) or `Tesseract.js` (OCR for scanned images).
+   * **Action:** Matches pattern-based regular expressions and runs semantic extraction to identify biomarkers, unit values, and standard ranges (e.g. HbA1c, LDL-C, TSH). It translates raw, dense medical printouts into clean JSON-formatted biomarker entries.
+
+2. **Health Memory Agent (Historical Recall):**
+   * **Role:** Acts as the platform's longitudinal query manager.
+   * **Action:** Queries local database archives (powered by `LocalStorage`) to retrieve the user's historical clinical logs. It aligns the newly ingested biomarkers alongside previous baselines, performing comparison analysis to detect short-term and long-term deviations.
+
+3. **Insight Generation Agent (Longitudinal Analysis & Trend Computation):**
+   * **Role:** The analytical brain of the dashboard trends.
+   * **Action:** Computes a unified longitudinal health score and determines trajectory slopes (e.g., whether cholesterol is rising or thyroid function is stabilizing). It maps out the exact data coordinates used to render interactive progress curves in Chart.js.
+
+4. **Safety & Risk Detection Agent (Guardrails & Alerts):**
+   * **Role:** Provides safety checkpoints and clinical out-of-bounds validation.
+   * **Action:** Compares extracted biomarker levels and symptoms against established emergency limits (e.g., high systolic blood pressure or critical HbA1c spikes). If critical metrics are detected, it flag-alerts the dashboard, adding vital self-care and emergency warnings without giving unauthorized final diagnoses.
+
+5. **Doctor Summary Agent (Synthesis & Consultation Planner):**
+   * **Role:** Prepares the patient for their next physical exam.
+   * **Action:** Synthesizes the timeline updates, metabolic changes, and warning flags into a printable Doctor Consultation Brief. It automatically drafts a list of targeted, hyper-relevant questions the patient should ask their primary care provider based on current and past health patterns.
+
+---
+
+## Visual Previews & Screenshots
+
+### 1. Dashboard Overview
+Below is the dashboard of HealthGuardian AI, showing the longitudinal health trends, biomarker tracking panels, and active medical insights.
+
+![Dashboard Preview](./public/images/dashboard_screenshot.png)
+
+### 2. Symptom Checker Workspace
+The Symptom Checker workspace allows patients to log natural language descriptions of symptoms and receive structured assessments categorized by potential triggers, warnings, self-care guidance, and doctor consultation advice.
+
+![Symptom Checker Preview](./public/images/symptom_checker_screenshot.png)
 
 ---
 
