@@ -1,0 +1,14 @@
+METROPOLITAN CLINICAL LABORATORY REPORT
+PATIENT: John Doe | DATE: 2026-01-10
+REPORT TYPE: Endocrine Biomarkers Panel
+------------------------------------------------------------
+TEST NAME                  RESULT       STANDARD REFERENCE
+------------------------------------------------------------
+Thyroid Stimulating (TSH)  7.2 uIU/mL   0.4 - 4.0 uIU/mL (HIGH)
+Glycated Hb (HbA1c)        6.4 %        4.0 - 5.6 % (ELEVATED)
+Total Cholesterol          205 mg/dL    100 - 199 mg/dL (ELEVATED)
+LDL Cholesterol            125 mg/dL    0 - 99 mg/dL (HIGH)
+Triglycerides              155 mg/dL    0 - 149 mg/dL (HIGH)
+Blood Pressure (Sys/Dia)   122/81 mmHg  90-120/60-80 mmHg (ELEVATED)
+------------------------------------------------------------
+Assessed by HealthGuardian AI.

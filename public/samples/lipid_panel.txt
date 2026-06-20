@@ -1,0 +1,13 @@
+METROPOLITAN CLINICAL LABORATORY REPORT
+PATIENT: John Doe | DATE: 2026-03-15
+REPORT TYPE: Lipid Follow-Up Panel
+------------------------------------------------------------
+TEST NAME                  RESULT       STANDARD REFERENCE
+------------------------------------------------------------
+Total Cholesterol          220 mg/dL    100 - 199 mg/dL (ELEVATED)
+LDL Cholesterol            142 mg/dL    0 - 99 mg/dL (HIGH)
+Triglycerides              175 mg/dL    0 - 149 mg/dL (HIGH)
+Glycated Hb (HbA1c)        6.6 %        4.0 - 5.6 % (ELEVATED)
+Blood Pressure (Sys/Dia)   130/84 mmHg  90-120/60-80 mmHg (ELEVATED)
+------------------------------------------------------------
+Assessed by HealthGuardian AI.

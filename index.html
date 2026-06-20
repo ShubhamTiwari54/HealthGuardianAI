@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO Meta Tags -->
+    <title>HealthGuardian AI - Health Information Tracking Platform</title>
+    <meta name="description" content="A premium health operations platform designed to help you understand, compare, and monitor your personal biomarkers and symptoms chronologically over time." />
+    <!-- Global Styling Sheet -->
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    
+    <!-- Main Shell -->
+    <div class="app-container">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar no-print">
+        <div class="sidebar-header">
+          <div class="logo-icon"><i data-lucide="shield-check" style="width: 20px; height: 20px; color: #ffffff;"></i></div>
+          <span class="logo-text">HealthGuardian AI</span>
+        </div>
+        
+        <ul class="sidebar-menu">
+          <li class="menu-item" id="nav-dashboard">
+            <a href="#/dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          </li>
+          <li class="menu-item" id="nav-reports">
+            <a href="#/reports"><i data-lucide="file-plus"></i> Upload Report</a>
+          </li>
+          <li class="menu-item" id="nav-symptoms">
+            <a href="#/symptoms"><i data-lucide="activity"></i> Symptom Checker</a>
+          </li>
+          <li class="menu-item" id="nav-trends">
+            <a href="#/trends"><i data-lucide="trending-up"></i> Health Trends</a>
+          </li>
+          <li class="menu-item" id="nav-timeline">
+            <a href="#/timeline"><i data-lucide="calendar"></i> Health Timeline</a>
+          </li>
+          <li class="menu-item" id="nav-doctor">
+            <a href="#/doctor"><i data-lucide="clipboard-list"></i> Doctor Summary</a>
+          </li>
+          <li class="menu-item" id="nav-settings">
+            <a href="#/settings"><i data-lucide="settings"></i> Settings</a>
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <div class="value-prop-box">
+            <h4 style="font-weight: 600; margin-bottom: 4px; color: var(--accent-primary);">Our Mission</h4>
+            <p>Understand, compare, and monitor your medical records chronologically to guide doctor visits.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Panel -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="app-header no-print">
+          <div class="header-title-section">
+            <h1 id="header-page-title">Dashboard</h1>
+            <p>Longitudinal Health Intelligence</p>
+          </div>
+          <div class="header-actions">
+            <a href="#/reports" class="btn-header-action btn-accent">
+              <i data-lucide="plus"></i> Add Lab Report
+            </a>
+          </div>
+        </header>
+
+        <!-- Dynamic Mount -->
+        <div id="app-view-mount" class="view-container">
+          <!-- Views are injected here by router -->
+        </div>
+      </main>
+
+    </div>
+
+    <!-- External CDNs -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    
+    <!-- Application Entry Module -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

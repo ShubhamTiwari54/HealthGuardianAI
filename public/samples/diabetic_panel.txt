@@ -1,0 +1,13 @@
+METROPOLITAN CLINICAL LABORATORY REPORT
+PATIENT: John Doe | DATE: 2026-06-18
+REPORT TYPE: Comprehensive Metabolic Biomarkers Panel
+------------------------------------------------------------
+TEST NAME                  RESULT       STANDARD REFERENCE
+------------------------------------------------------------
+Glycated Hb (HbA1c)        6.8 %        4.0 - 5.6 % (HIGH)
+Total Cholesterol          238 mg/dL    100 - 199 mg/dL (HIGH)
+LDL Cholesterol            158 mg/dL    0 - 99 mg/dL (HIGH)
+Triglycerides              195 mg/dL    0 - 149 mg/dL (HIGH)
+Blood Pressure (Sys/Dia)   138/88 mmHg  90-120/60-80 mmHg (ELEVATED)
+------------------------------------------------------------
+Assessed by HealthGuardian AI.
