@@ -4,7 +4,7 @@ import { DEMO_SYMPTOMS } from '../data/mockData.js';
 
 export const SymptomWorkspaceView = {
   render() {
-    const symptoms = LocalStorageTool.getSymptoms().sort((a, b) => new Date(b.date) - new Date(a.date));
+    const symptoms = LocalStorageTool.getSymptoms().sort((a, b) => new Date(b.date) - new Date(a.date) || b.id.localeCompare(a.id));
     const activeSymptom = symptoms[0] || null;
 
     return `
@@ -46,6 +46,12 @@ export const SymptomWorkspaceView = {
               <div class="progress-container">
                 <div class="progress-bar" id="symptom-bar-fill"></div>
               </div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="symptom-error-box" class="error-card" style="display: none; margin-top: 20px;">
+              <i data-lucide="alert-circle" style="flex-shrink: 0; width: 18px; height: 18px;"></i>
+              <div id="symptom-error-msg">Symptom analysis failed. Please verify your connection or Gemini API key.</div>
             </div>
 
             <!-- Test Cases presets -->
@@ -209,6 +215,9 @@ export const SymptomWorkspaceView = {
     const percentageLabel = document.getElementById('symptom-percentage-label');
     const barFill = document.getElementById('symptom-bar-fill');
     
+    const errorBox = document.getElementById('symptom-error-box');
+    const errorMsg = document.getElementById('symptom-error-msg');
+    
     const resultsContainer = document.getElementById('symptom-results-container');
     const resultsMeta = document.getElementById('symptom-results-meta');
 
@@ -218,6 +227,7 @@ export const SymptomWorkspaceView = {
         return;
       }
 
+      if (errorBox) errorBox.style.display = "none";
       progressCard.style.display = "block";
       progressLabel.textContent = "Analyzing symptoms cluster...";
       percentageLabel.textContent = "0%";
@@ -247,7 +257,12 @@ export const SymptomWorkspaceView = {
 
       } catch (err) {
         progressCard.style.display = "none";
-        alert("Symptom analysis failed: " + err.message);
+        if (errorBox && errorMsg) {
+          errorBox.style.display = "flex";
+          errorMsg.textContent = `Symptom analysis failed: ${err.message || err}`;
+        } else {
+          alert("Symptom analysis failed: " + err.message);
+        }
       }
     };
 

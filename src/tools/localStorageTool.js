@@ -89,7 +89,7 @@ export const LocalStorageTool = {
     this.seedDatabase();
     // Sort timeline chronologically descending
     const timeline = JSON.parse(localStorage.getItem(STORAGE_KEYS.TIMELINE)) || [];
-    return timeline.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return timeline.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id.localeCompare(a.id));
   },
 
   saveTimeline(timeline) {

@@ -4,7 +4,7 @@ import { BIOMARKER_RANGES } from '../data/mockData.js';
 
 export const ReportWorkspaceView = {
   render() {
-    const reports = LocalStorageTool.getReports().sort((a, b) => new Date(b.date) - new Date(a.date));
+    const reports = LocalStorageTool.getReports().sort((a, b) => new Date(b.date) - new Date(a.date) || b.id.localeCompare(a.id));
     const activeReport = reports[0] || null;
 
     return `

@@ -6,6 +6,8 @@ import { HealthMemoryAgent } from '../agents/healthMemoryAgent.js';
 import { InsightGenerationAgent } from '../agents/insightGenerationAgent.js';
 import { SafetyRiskAgent } from '../agents/safetyRiskAgent.js';
 import { DoctorVisitPreparationAgent } from '../agents/doctorVisitAgent.js';
+import { OCRTool } from '../tools/ocrTool.js';
+import { PDFParserTool } from '../tools/pdfParserTool.js';
 
 class AgentOrchestratorClass {
   constructor() {
@@ -42,19 +44,19 @@ class AgentOrchestratorClass {
 
       if (file) {
         if (file.type === "application/pdf") {
-          rawText = await this.reportAgent.executeTool(this.reportAgent.reportAgent?.pdfParser || window.PDFParserTool || require('../tools/pdfParserTool.js').PDFParserTool, "parse", file, (p) => {
+          rawText = await this.reportAgent.executeTool(PDFParserTool, "parse", file, (p) => {
             if (onProgress) onProgress({ stage: `Reading PDF text content...`, percent: Math.round(10 + (p * 0.4)) }); // scales 10% to 50%
           });
         } else if (file.type === "text/plain") {
           // Plain text helper
           if (onProgress) onProgress({ stage: "Reading clinical text...", percent: 30 });
-          rawText = await this.reportAgent.executeTool(window.OCRTool || require('../tools/ocrTool.js').OCRTool, "process", file, (p) => {
+          rawText = await this.reportAgent.executeTool(OCRTool, "process", file, (p) => {
             if (onProgress) onProgress({ stage: "Reading file...", percent: Math.round(10 + (p * 0.4)) });
           });
         } else {
           // Image OCR via Tesseract
           if (onProgress) onProgress({ stage: "Initializing Tesseract OCR core...", percent: 20 });
-          rawText = await this.reportAgent.executeTool(window.OCRTool || require('../tools/ocrTool.js').OCRTool, "process", file, (p) => {
+          rawText = await this.reportAgent.executeTool(OCRTool, "process", file, (p) => {
             if (onProgress) onProgress({ stage: `Running OCR text recognition...`, percent: Math.round(20 + (p * 0.4)) }); // scales 20% to 60%
           });
         }

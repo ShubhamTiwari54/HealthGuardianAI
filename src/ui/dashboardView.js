@@ -4,8 +4,8 @@ import { BIOMARKER_RANGES } from '../data/mockData.js';
 
 export const DashboardView = {
   render() {
-    const reports = LocalStorageTool.getReports().sort((a, b) => new Date(b.date) - new Date(a.date));
-    const symptoms = LocalStorageTool.getSymptoms().sort((a, b) => new Date(b.date) - new Date(a.date));
+    const reports = LocalStorageTool.getReports().sort((a, b) => new Date(b.date) - new Date(a.date) || b.id.localeCompare(a.id));
+    const symptoms = LocalStorageTool.getSymptoms().sort((a, b) => new Date(b.date) - new Date(a.date) || b.id.localeCompare(a.id));
     
     const latestReport = reports[0] || null;
     const latestSymptom = symptoms[0] || null;
