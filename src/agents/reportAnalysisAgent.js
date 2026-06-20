@@ -83,6 +83,10 @@ export class ReportAnalysisAgent extends BaseAgent {
       rawText,
       metrics,
       assessments,
+      // Demographics
+      patientName: geminiData.patientName || "John Doe",
+      patientAge: geminiData.patientAge || 45,
+      patientGender: geminiData.patientGender || "Male",
       // Real Gemini structured content
       summary: geminiData.summary,
       importantFindings: geminiData.importantFindings || [],

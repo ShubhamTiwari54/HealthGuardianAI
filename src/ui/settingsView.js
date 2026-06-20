@@ -13,34 +13,56 @@ export const SettingsView = {
 
       <div class="dashboard-grid animate-fade-in" style="grid-template-columns: 2fr 1fr;">
         
-        <!-- Left: Profile Settings Form -->
+        <!-- Left: AI Configuration & Customizations -->
         <div class="panel">
           <div class="panel-header">
-            <h3 class="panel-title"><i data-lucide="user"></i> Patient Profile Settings</h3>
+            <h3 class="panel-title"><i data-lucide="sliders"></i> Platform Preference Configurations</h3>
           </div>
           
-          <div class="form-group">
-            <label class="form-label" for="profile-name">Full Patient Name</label>
-            <input type="text" class="form-control" id="profile-name" value="John Doe" />
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-              <label class="form-label" for="profile-age">Age</label>
-              <input type="number" class="form-control" id="profile-age" value="45" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="profile-gender">Gender</label>
-              <select id="profile-gender" class="form-control">
-                <option value="Male" selected>Male</option>
-                <option value="Female">Female</option>
-                <option value="Non-Binary">Non-Binary</option>
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div>
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">AI Engine Interpretation Tone</h4>
+              <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4; margin-bottom: 10px;">
+                Customize the communication tone used by the AI agents when explaining blood panels and symptoms:
+              </p>
+              <select id="setting-ai-tone" class="form-control" style="width: 100%;">
+                <option value="Empathetic" selected>Empathetic & Supportive (Default)</option>
+                <option value="Clinical">Strictly Clinical & Objective</option>
+                <option value="Action-Oriented">Action-Oriented & Direct</option>
               </select>
             </div>
+
+            <div>
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">Biomarker Alert Threshold Limits</h4>
+              <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4; margin-bottom: 10px;">
+                Toggle alarm limits. Standard uses conventional diagnostic bounds; preventative flags warnings early to encourage baseline improvements:
+              </p>
+              <select id="setting-alert-bounds" class="form-control" style="width: 100%;">
+                <option value="Standard" selected>Standard Clinical Ranges (Default)</option>
+                <option value="Preventative">Preventative / Early-Warning Ranges</option>
+              </select>
+            </div>
+
+            <div>
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">Data Security & Session Policies</h4>
+              <p class="text-secondary" style="font-size: 0.75rem; line-height: 1.4; margin-bottom: 10px;">
+                Manage privacy bounds for stored timelines, OCR extractions, and timelines:
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="setting-encrypt" checked style="width: 16px; height: 16px;" />
+                  Encrypt Local Timeline Logs in Browser Storage
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="setting-autoclear" style="width: 16px; height: 16px;" />
+                  Automatically Wipe Stored Reports on Browser Tab Close
+                </label>
+              </div>
+            </div>
           </div>
 
-          <button class="btn-header-action btn-accent" id="btn-save-profile" style="margin-top: 10px;">
-            Save Profile Settings
+          <button class="btn-header-action btn-accent" id="btn-save-settings" style="margin-top: 24px; width: 100%; justify-content: center;">
+            <i data-lucide="check"></i> Save Settings Configuration
           </button>
         </div>
 
@@ -76,18 +98,30 @@ export const SettingsView = {
   },
 
   afterRender() {
-    const saveProfile = document.getElementById('btn-save-profile');
+    const saveSettings = document.getElementById('btn-save-settings');
     const resetDb = document.getElementById('btn-settings-reset');
     const clearDb = document.getElementById('btn-settings-clear');
 
-    if (saveProfile) {
-      saveProfile.addEventListener('click', () => {
-        const nameVal = document.getElementById('profile-name').value;
-        const ageVal = document.getElementById('profile-age').value;
-        const genderVal = document.getElementById('profile-gender').value;
+    // Load saved preferences if available
+    const savedPrefs = JSON.parse(localStorage.getItem('health_guardian_prefs'));
+    if (savedPrefs) {
+      if (document.getElementById('setting-ai-tone')) document.getElementById('setting-ai-tone').value = savedPrefs.tone;
+      if (document.getElementById('setting-alert-bounds')) document.getElementById('setting-alert-bounds').value = savedPrefs.bounds;
+      if (document.getElementById('setting-encrypt')) document.getElementById('setting-encrypt').checked = savedPrefs.encrypt;
+      if (document.getElementById('setting-autoclear')) document.getElementById('setting-autoclear').checked = savedPrefs.autoclear;
+    }
 
-        // Custom save alert
-        alert(`Profile parameters updated: ${nameVal}, ${ageVal} y/o, ${genderVal}`);
+    if (saveSettings) {
+      saveSettings.addEventListener('click', () => {
+        const toneVal = document.getElementById('setting-ai-tone').value;
+        const boundsVal = document.getElementById('setting-alert-bounds').value;
+        const encryptVal = document.getElementById('setting-encrypt').checked;
+        const autoclearVal = document.getElementById('setting-autoclear').checked;
+
+        const prefs = { tone: toneVal, bounds: boundsVal, encrypt: encryptVal, autoclear: autoclearVal };
+        localStorage.setItem('health_guardian_prefs', JSON.stringify(prefs));
+
+        alert(`System configurations saved successfully!\n- Tone: ${toneVal}\n- Alert Limits: ${boundsVal}\n- Local Storage Encryption: ${encryptVal ? 'Enabled' : 'Disabled'}`);
       });
     }
 

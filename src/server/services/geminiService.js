@@ -90,6 +90,7 @@ export const GeminiService = {
         "${reportText}"
         
         Extract the values of all health markers and generate a patient-friendly assessment containing:
+        - Patient demographics if mentioned (name, age, gender).
         - A simple, supportive Summary.
         - Important findings (specifically listing which indicators are abnormal/out-of-bounds).
         - What it means (clear human translation of clinical meanings).
@@ -99,6 +100,9 @@ export const GeminiService = {
         
         You MUST respond with a JSON object strictly matching this schema:
         {
+          "patientName": "String (extracted patient name, or 'John Doe' if not found/unspecified)",
+          "patientAge": "String or Number (extracted patient age, or 45 if not found/unspecified)",
+          "patientGender": "String (extracted patient gender, or 'Male' if not found/unspecified)",
           "summary": "String",
           "importantFindings": ["String detail 1", "String detail 2"],
           "whatItMeans": ["String detail 1", "String detail 2"],

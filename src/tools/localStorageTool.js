@@ -118,11 +118,45 @@ export const LocalStorageTool = {
     this.saveLogs(logs);
   },
 
+  getReminders() {
+    return JSON.parse(localStorage.getItem('health_guardian_reminders')) || [];
+  },
+
+  saveReminders(reminders) {
+    localStorage.setItem('health_guardian_reminders', JSON.stringify(reminders));
+  },
+
+  addReminder(reminder) {
+    const reminders = this.getReminders();
+    reminders.push(reminder);
+    this.saveReminders(reminders);
+    
+    // Also add to timeline so it shows chronologically
+    this.addTimelineEvent({
+      id: `time-${reminder.id}`,
+      date: reminder.datetime.split('T')[0],
+      type: 'reminder',
+      title: `${reminder.type === 'medication' ? '💊 Medication' : '📅 Checkup'}: ${reminder.title}`,
+      description: `Scheduled at ${reminder.datetime.replace('T', ' ')}. Instructions: ${reminder.notes || 'None'}`,
+      data: reminder
+    });
+  },
+
+  updateReminder(reminder) {
+    const reminders = this.getReminders();
+    const idx = reminders.findIndex(r => r.id === reminder.id);
+    if (idx !== -1) {
+      reminders[idx] = reminder;
+      this.saveReminders(reminders);
+    }
+  },
+
   clearDatabase() {
     localStorage.removeItem(STORAGE_KEYS.REPORTS);
     localStorage.removeItem(STORAGE_KEYS.SYMPTOMS);
     localStorage.removeItem(STORAGE_KEYS.TIMELINE);
     localStorage.removeItem(STORAGE_KEYS.LOGS);
+    localStorage.removeItem('health_guardian_reminders');
     localStorage.removeItem(STORAGE_KEYS.IS_SEEDED);
     this.seedDatabase(true);
   }

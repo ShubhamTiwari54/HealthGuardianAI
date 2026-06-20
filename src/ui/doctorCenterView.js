@@ -28,23 +28,32 @@ export const DoctorCenterView = {
 
     // Dynamic Compilation of Consultation checklist
     const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-    const questions = [];
-    const recommendedTests = [];
+    // Leverage AI-generated questions and parameters directly from the latest report
+    let questions = latestReport?.questionsForDoctor ? [...latestReport.questionsForDoctor] : [];
+    
+    let recommendedTests = [];
+    if (latestReport?.thingsToMonitor) {
+      if (Array.isArray(latestReport.thingsToMonitor)) {
+        recommendedTests = [...latestReport.thingsToMonitor];
+      } else {
+        const t = latestReport.thingsToMonitor;
+        recommendedTests = t.includes('.') ? t.split('.').map(s => s.trim()).filter(s => s.length > 3) : [t];
+      }
+    }
+
     const riskAlerts = [];
     let riskLevel = "Standard Care";
 
-    // 1. Analyze report values
+    // 1. Merge clinical alert rules for risk badge and alerts list
     if (latestReport && latestReport.metrics) {
       const m = latestReport.metrics;
       if (m.hba1c) {
         if (m.hba1c >= 6.5) {
-          questions.push(`My HbA1c is currently ${m.hba1c}%, which is in the diabetic range. Should we consider starting medication, and what specific lifestyle adjustments do you recommend?`);
           recommendedTests.push("Fasting plasma glucose / oral glucose tolerance test");
           recommendedTests.push("Basic metabolic panel (BMP) to check kidney function");
           riskLevel = "High Risk";
           riskAlerts.push(`Severe glycemic elevation noted: HbA1c is ${m.hba1c}%`);
         } else if (m.hba1c >= 5.7) {
-          questions.push(`My HbA1c is ${m.hba1c}% (prediabetes range). What nutritional or weight parameters can I adjust to prevent progression?`);
           recommendedTests.push("Follow-up HbA1c screening in 3-6 months");
           riskLevel = riskLevel === "High Risk" ? "High Risk" : "Moderate Risk";
         }
@@ -52,15 +61,14 @@ export const DoctorCenterView = {
 
       if (m.ldl) {
         if (m.ldl >= 130) {
-          questions.push(`My LDL ('bad') cholesterol is high at ${m.ldl} mg/dL. Given my overall biomarker history, do you recommend statin therapy or dietary shifts?`);
           recommendedTests.push("Repeat lipid panel (Total, LDL, HDL, Triglycerides)");
           recommendedTests.push("ASCVD cardiovascular risk assessment");
-          riskLevel = riskLevel === "High Risk" ? "High Risk" : "Moderate Risk";
+          riskLevel = "High Risk";
+          riskAlerts.push(`Severe LDL cholesterol elevation noted: ${m.ldl} mg/dL`);
         }
       }
 
       if (m.tsh && m.tsh > 4.0) {
-        questions.push(`My TSH level of ${m.tsh} uIU/mL is elevated. Does this indicate hypothyroidism, and should we evaluate my Free T4/Free T3 thyroid hormones?`);
         recommendedTests.push("Free T4 and Free T3 thyroid hormone panels");
         riskLevel = riskLevel === "High Risk" ? "High Risk" : "Moderate Risk";
       }
@@ -82,6 +90,9 @@ export const DoctorCenterView = {
         recommendedTests.push("Diabetic monofilament foot exam");
       }
     }
+
+    // Deduplicate tests
+    recommendedTests = [...new Set(recommendedTests)];
 
     // Defaults
     if (questions.length === 0) {
@@ -128,11 +139,11 @@ export const DoctorCenterView = {
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; background-color: #f8fafc; padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 24px;">
           <div>
             <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">PATIENT</div>
-            <div style="font-size: 0.85rem; font-weight: 700;">John Doe</div>
+            <div style="font-size: 0.85rem; font-weight: 700;">${latestReport?.patientName || "John Doe"}</div>
           </div>
           <div>
             <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">AGE / GENDER</div>
-            <div style="font-size: 0.85rem; font-weight: 700;">45 / Male</div>
+            <div style="font-size: 0.85rem; font-weight: 700;">${latestReport?.patientAge || 45} / ${latestReport?.patientGender || "Male"}</div>
           </div>
           <div>
             <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">LATEST REPORT</div>
@@ -156,10 +167,18 @@ export const DoctorCenterView = {
           </div>
         ` : ''}
 
+        <!-- Clinical Summary Section -->
+        <div class="doctor-sheet-section">
+          <h3><i data-lucide="sparkles" style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Clinical Interpretation Summary</h3>
+          <p style="background-color: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); line-height: 1.5; font-size: 0.85rem; color: var(--text-secondary);">
+            ${latestReport?.summary || 'No clinical report summary generated yet. Please upload a report to synthesize details.'}
+          </p>
+        </div>
+
         <!-- Active Symptoms -->
         <div class="doctor-sheet-section">
           <h3><i data-lucide="clipboard" style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Symptom History Summary</h3>
-          <p style="font-style: italic; background-color: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <p style="font-style: italic; background-color: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-secondary);">
             ${latestSymptom ? `"${latestSymptom.symptomText}"` : 'No symptom complaints logged in current timeline.'}
           </p>
         </div>
