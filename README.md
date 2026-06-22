@@ -4,13 +4,17 @@ An **Agentic Health Intelligence Platform** designed to help users aggregate, co
 
 The system leverages a multi-agent coordination architecture in the background to extract biomarkers, cross-reference historical milestones, run risk screenings, and compile structured clinician consultation checklists.
 
+---
+
+## 🏥 Clinical Workflow Overview
+
+HealthGuardian AI coordinates a pipeline of five specialized AI agents. Rather than delivering a simple one-off static response, the orchestration of these agents guarantees an ongoing tracking operations center that helps patients detect trends before they cross into critical clinical bounds.
+
 ![HealthGuardian AI Clinical Workflow](./public/images/workflow.png)
 
 ### The Multi-Agent Clinical Workflow Explained
 
-When a patient uploads a laboratory panel or submits symptom details, HealthGuardian AI initiates a sequenced, background coordination pipeline of five specialized AI agents. Rather than delivering a simple one-off static response, the orchestration of these agents guarantees an ongoing tracking operations center that helps patients detect trends before they cross into critical clinical bounds.
-
-Here is the step-by-step agentic execution path:
+When a patient uploads a laboratory panel or submits symptom details, HealthGuardian AI initiates a sequenced, background coordination pipeline of five specialized AI agents:
 
 1. **Report Analysis Agent (Ingestion & Extraction):**
    * **Role:** Analyzes the raw unstructured text extracted via client-side `PDF.js` (for PDF documents) or `Tesseract.js` (OCR for scanned images).
@@ -34,29 +38,35 @@ Here is the step-by-step agentic execution path:
 
 ---
 
-## Visual Previews & Screenshots
+## 🛠️ Technology Stack & Libraries
+
+To deliver a high-fidelity client-side experience alongside secure backend intelligence, HealthGuardian AI utilizes the following technologies:
+
+* **Frontend Framework:** Vanilla HTML5, CSS3 Variables, and ES6 Javascript (bundled via **Vite**).
+* **Database & Persistence:** **LocalStorage** Database Tool managing patient records, settings, and timeline events in the browser.
+* **Optical Character Recognition:** **Tesseract.js** for browser-side image processing and text extraction of photo scans.
+* **Document Parser:** **PDF.js** for high-efficiency, multi-threaded text extraction inside copyable PDF records.
+* **Data Visualization:** **Chart.js** rendering progress curves for HbA1c, LDL, and TSH biomarkers.
+* **AI Orchestration & Backend:** **Express.js** API proxying requests to the **Google Gemini API** (`gemini-2.5-flash`) for clinical reports processing, symptom triage, and medical summary synthesis.
+* **Security & Configuration:** **dotenv** configuration managing environment credentials.
+
+---
+
+## 📸 Visual Previews & Workspace Guide
 
 ### 1. Dashboard Overview
-Below is the dashboard of HealthGuardian AI, showing the longitudinal health trends, biomarker tracking panels, and active medical insights.
+The main interface displays longitudinal health trends, biomarker tracking panels, and active medical insights.
 
 ![Dashboard Preview](./public/images/dashboard_screenshot.png)
 
 ### 2. Symptom Checker Workspace
-The Symptom Checker workspace allows patients to log natural language descriptions of symptoms and receive structured assessments categorized by potential triggers, warnings, self-care guidance, and doctor consultation advice.
+Allows patients to log natural language descriptions of symptoms and receive structured assessments categorized by potential causes, triggers, warnings, self-care guidance, and doctor consultation advice.
 
 ![Symptom Checker Preview](./public/images/symptom_checker_screenshot.png)
 
 ---
 
-## The Value Proposition: Health Tracking Over Time
-
-Rather than performing one-time, isolated report summaries (which can easily be done via generic chat interfaces), HealthGuardian AI emphasizes **longitudinal tracking**. 
-
-By saving laboratory panels and symptom logs chronologically in a personal timeline, the platform tracks biomarker slopes, measures metabolic changes, and helps patients prepare for consultations with organized progress data.
-
----
-
-## System Architecture
+## 📈 Platform Workspaces
 
 HealthGuardian AI is structured into four clean layers, keeping the user interface entirely focused on the patient's records while coordinating agent pipelines quietly in the background.
 
@@ -101,15 +111,14 @@ Orchestrator --> Output[Patient Summary]
 ```
 
 ### 1. UI Layer (`src/ui/`)
-* Refactored as a clean, bright, professional healthcare SaaS application (modeled after Fitbit and Apple Health).
-* Consists of 7 primary patient workspaces:
-  - 🏠 **Dashboard:** Recent reports summary, trend charts, active insights, and upcoming tasks.
-  - 📄 **Upload Report:** Working drag-and-drop ingestion with real-time text extraction loaders.
-  - 🤒 **Symptom Checker:** Structured assessment card (Causes, Triggers, Self-Care, Warnings, Doctor advice).
-  - 📈 **Health Trends:** Longitudinal progress curves charting HbA1c, LDL, and TSH values.
-  - 📋 **Health Timeline:** Chronological feed of all report and symptom events with collapsible details.
-  - 👨⚕️ **Doctor Summary:** Synthesized physician guides and questions checklists with PDF print support.
-  - ⚙️ **Settings:** Patient profile setups and local storage database seeding.
+Consists of 7 primary patient workspaces:
+* 🏠 **Dashboard:** Recent reports summary, trend charts, active insights, and upcoming tasks.
+* 📄 **Upload Report:** Working drag-and-drop ingestion with real-time text extraction loaders.
+* 🤒 **Symptom Checker:** Structured assessment card (Causes, Triggers, Self-Care, Warnings, Doctor advice).
+* 📈 **Health Trends:** Longitudinal progress curves charting HbA1c, LDL, and TSH values.
+* 📋 **Health Timeline:** Chronological feed of all report and symptom events with collapsible details.
+* 👨⚕️ **Doctor Summary:** Synthesized physician guides and questions checklists with PDF print support.
+* ⚙️ **Settings:** Patient profile setups and local storage database seeding.
 
 ### 2. Internal Agent Layer (`src/agents/`)
 * **Report Analysis Agent:** Parses reports, extracts biomarkers, and compiles patient-friendly summaries.
@@ -128,7 +137,7 @@ Orchestrator --> Output[Patient Summary]
 
 ---
 
-## Technical Setup & Commands
+## ⚙️ Technical Setup & Commands
 
 ### Prerequisites
 * [Node.js](https://nodejs.org/) (v16+) and npm.
