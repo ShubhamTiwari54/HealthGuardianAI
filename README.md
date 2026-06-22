@@ -111,11 +111,12 @@ Orchestrator --> Output[Patient Summary]
 ```
 
 ### 1. UI Layer (`src/ui/`)
-Consists of 7 primary patient workspaces:
+Consists of 8 primary patient workspaces:
 * 🏠 **Dashboard:** Recent reports summary, trend charts, active insights, and upcoming tasks.
 * 📄 **Upload Report:** Working drag-and-drop ingestion with real-time text extraction loaders.
 * 🤒 **Symptom Checker:** Structured assessment card (Causes, Triggers, Self-Care, Warnings, Doctor advice).
 * 📈 **Health Trends:** Longitudinal progress curves charting HbA1c, LDL, and TSH values.
+* 💬 **AI Assistant:** Secure clinical chat workspace where patients can ask questions about their health, biomarkers, or symptoms.
 * 📋 **Health Timeline:** Chronological feed of all report and symptom events with collapsible details.
 * 👨⚕️ **Doctor Summary:** Synthesized physician guides and questions checklists with PDF print support.
 * ⚙️ **Settings:** Patient profile setups and local storage database seeding.

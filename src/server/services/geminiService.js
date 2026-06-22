@@ -166,5 +166,39 @@ export const GeminiService = {
     } catch (error) {
       throw handleGeminiError(error);
     }
+  },
+
+  // 4. Clinical AI Assistant Chat
+  async askAssistant(question) {
+    if (!genAI) throw handleGeminiError(new Error("API key missing"));
+
+    try {
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.5-flash",
+      });
+
+      const prompt = `
+        You are a highly supportive, empathetic, and knowledgeable clinical health assistant for HealthGuardian AI.
+        Answer the following health question/query from the user: "${question}".
+        
+        Guidelines:
+        - Provide detailed, educational health details.
+        - Emphasize that you are an AI assistant, not a doctor.
+        - Maintain a highly professional, caring, and clinical tone.
+        - Avoid diagnosing or giving direct treatment advice. Suggest asking their primary care provider (PCP) where relevant.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      
+      if (!text || !text.trim()) {
+        throw new Error("Empty response received from Gemini.");
+      }
+
+      return { response: text };
+    } catch (error) {
+      throw handleGeminiError(error);
+    }
   }
 };
+

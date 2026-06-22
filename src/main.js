@@ -1,4 +1,5 @@
 import { LocalStorageTool } from './tools/localStorageTool.js';
+import { TrendAnalyzerTool } from './tools/trendAnalyzerTool.js';
 import { Router } from './ui/router.js';
 
 // Views
@@ -6,8 +7,9 @@ import { DashboardView } from './ui/dashboardView.js';
 import { ReportWorkspaceView } from './ui/reportWorkspaceView.js';
 import { SymptomWorkspaceView } from './ui/symptomWorkspaceView.js';
 import { TrendsView } from './ui/trendsView.js';
-import { TimelineView } from './ui/timelineView.js';
+import { AIAssistantView } from './ui/aiAssistantView.js';
 import { DoctorCenterView } from './ui/doctorCenterView.js';
+import { TimelineView } from './ui/timelineView.js';
 import { SettingsView } from './ui/settingsView.js';
 
 // 1. Seed database with baseline data
@@ -18,40 +20,98 @@ Router.register('#/dashboard', DashboardView);
 Router.register('#/reports', ReportWorkspaceView);
 Router.register('#/symptoms', SymptomWorkspaceView);
 Router.register('#/trends', TrendsView);
-Router.register('#/timeline', TimelineView);
+Router.register('#/assistant', AIAssistantView);
 Router.register('#/doctor', DoctorCenterView);
+Router.register('#/timeline', TimelineView);
 Router.register('#/settings', SettingsView);
 
-// 3. Update header title dynamically on hash change
+// Helper to update sidebar score widget dynamically
+export function updateSidebarScore() {
+  const reports = LocalStorageTool.getReports().sort((a, b) => new Date(b.date) - new Date(a.date));
+  const latestReport = reports[0] || null;
+  const scoreData = TrendAnalyzerTool.calculateHealthScore(latestReport);
+
+  const badgeEl = document.getElementById('sidebar-score-badge');
+  const valueEl = document.getElementById('sidebar-score-value');
+  const barEl = document.getElementById('sidebar-score-bar');
+
+  if (badgeEl) {
+    badgeEl.textContent = scoreData.label;
+    badgeEl.className = 'score-badge';
+    if (scoreData.score < 60) {
+      badgeEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+      badgeEl.style.color = 'var(--accent-danger)';
+    } else if (scoreData.score < 80) {
+      badgeEl.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+      badgeEl.style.color = 'var(--accent-warning)';
+    } else {
+      badgeEl.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+      badgeEl.style.color = 'var(--accent-success)';
+    }
+  }
+
+  if (valueEl) {
+    valueEl.innerHTML = `${scoreData.score}<span class="score-max">/100</span>`;
+  }
+
+  if (barEl) {
+    barEl.style.width = `${scoreData.score}%`;
+    if (scoreData.score < 60) {
+      barEl.style.background = 'var(--accent-danger)';
+    } else if (scoreData.score < 80) {
+      barEl.style.background = 'var(--accent-warning)';
+    } else {
+      barEl.style.background = 'var(--gradient-emerald)';
+    }
+  }
+}
+
+// 3. Update header title and dynamic subtitle on hash change
 const updateHeaderTitle = () => {
   const hash = window.location.hash || '#/dashboard';
   const headerTitle = document.getElementById('header-page-title');
+  const headerSubtitle = document.getElementById('header-page-subtitle');
   
-  if (headerTitle) {
+  // Also sync sidebar score card on every page change
+  updateSidebarScore();
+
+  if (headerTitle && headerSubtitle) {
     switch(hash) {
       case '#/dashboard':
-        headerTitle.textContent = "Health Intelligence Dashboard";
+        headerTitle.textContent = "Dashboard";
+        headerSubtitle.textContent = "Welcome back! Here's your health overview.";
         break;
       case '#/reports':
-        headerTitle.textContent = "Upload & Ingest Medical Report";
+        headerTitle.textContent = "Medical Reports";
+        headerSubtitle.textContent = "Upload and analyze your lab panels to extract biomarkers.";
         break;
       case '#/symptoms':
-        headerTitle.textContent = "Symptom Assessment Workspace";
+        headerTitle.textContent = "Symptom Assessment";
+        headerSubtitle.textContent = "Input symptoms for structured triage warnings and education.";
         break;
       case '#/trends':
-        headerTitle.textContent = "Longitudinal Health Trends";
+        headerTitle.textContent = "Health Trends";
+        headerSubtitle.textContent = "Longitudinal biological progress trajectories over time.";
+        break;
+      case '#/assistant':
+        headerTitle.textContent = "Clinical AI Assistant";
+        headerSubtitle.textContent = "Chat with secure AI for supportive and educational health insights.";
+        break;
+      case '#/doctor':
+        headerTitle.textContent = "Doctor Summary";
+        headerSubtitle.textContent = "Synthesize clinician briefing sheets and consultation checklists.";
         break;
       case '#/timeline':
         headerTitle.textContent = "Patient Health Timeline";
-        break;
-      case '#/doctor':
-        headerTitle.textContent = "Doctor Summary Center";
+        headerSubtitle.textContent = "Chronological journal tracking checkups, panels, and reminders.";
         break;
       case '#/settings':
-        headerTitle.textContent = "System Settings & Profile";
+        headerTitle.textContent = "System Settings";
+        headerSubtitle.textContent = "Configure platform preferences and reset sandbox database logs.";
         break;
       default:
         headerTitle.textContent = "HealthGuardian AI";
+        headerSubtitle.textContent = "Longitudinal Health Intelligence";
     }
   }
 };
@@ -62,8 +122,9 @@ window.addEventListener('load', updateHeaderTitle);
 // 4. Initialize Router
 Router.init('app-view-mount');
 
-// 5. Expose TimelineView globally for background refresh callbacks
+// 5. Expose Timeline/Score Refresh globally for background updates
 window.TimelineViewInstance = TimelineView;
+window.refreshSidebarScore = updateSidebarScore;
 
 // 6. Reminders Background Alert Checker
 function showReminderToast(reminder) {
@@ -87,7 +148,7 @@ function showReminderToast(reminder) {
   toast.style.margin = '0';
   toast.style.boxShadow = '0 10px 25px rgba(15, 23, 42, 0.15)';
   toast.style.border = '1px solid rgba(245, 158, 11, 0.3)';
-  toast.style.borderLeft = '4px solid var(--accent-amber)';
+  toast.style.borderLeft = '4px solid var(--accent-warning)';
   toast.style.background = '#ffffff';
   toast.style.color = 'var(--text-primary)';
   toast.style.padding = '16px';
@@ -111,7 +172,7 @@ function showReminderToast(reminder) {
       <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 4px 0 0 0;">${reminder.notes || 'No notes'}</p>
     </div>
     <div style="display: flex; gap: 8px; margin-top: 4px;">
-      <button id="toast-complete-${reminder.id}" style="padding: 6px 12px; font-size: 0.7rem; background-color: var(--accent-emerald); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; height: auto;">
+      <button id="toast-complete-${reminder.id}" style="padding: 6px 12px; font-size: 0.7rem; background-color: var(--accent-success); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; height: auto;">
         Mark as Taken/Done
       </button>
       <button id="toast-snooze-${reminder.id}" style="padding: 6px 12px; font-size: 0.7rem; background-color: #f1f5f9; color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; height: auto;">
@@ -155,6 +216,8 @@ function showReminderToast(reminder) {
         alert(`Reminder "${reminder.title}" marked as Completed!`);
       }
 
+      // Refresh sidebar health score widget
+      updateSidebarScore();
       toast.remove();
     });
   }

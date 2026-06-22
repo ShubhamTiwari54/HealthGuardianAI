@@ -61,6 +61,22 @@ app.post('/api/doctor-summary', async (req, res, next) => {
   }
 });
 
+// 4. Clinical AI Chat Assistant
+app.post('/api/ai-assistant', async (req, res, next) => {
+  const { question } = req.body;
+  if (!question || !question.trim()) {
+    return res.status(400).json({ error: "Question query description is required." });
+  }
+
+  try {
+    const answer = await GeminiService.askAssistant(question);
+    res.json(answer);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 // Serve compiled static assets in production mode
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'dist')));
